@@ -9,6 +9,9 @@
       <v-icon v-if="!fullscreen">mdi-fullscreen</v-icon>
       <v-icon v-else>mdi-fullscreen-exit</v-icon>
     </v-btn>
+    <v-snackbar v-model="snackbar" timeout="1000" color="error">
+      <span class="snackbar text-xs-center">😜</span>
+    </v-snackbar>
   </v-container>
 </template>
 
@@ -24,7 +27,8 @@ export default {
         .map(a => [Math.random(), a])
         .sort((a, b) => a[0] - b[0])
         .map(a => a[1]),
-      openDoor: undefined
+      openDoor: undefined,
+      snackbar: false
     }
   },
   components: {
@@ -47,7 +51,15 @@ export default {
       this.fullscreen = !this.fullscreen
     },
     open: function (door) {
-      this.openDoor = door === this.openDoor ? undefined : door
+      var currentDate = new Date()
+      var day = currentDate.getDate()
+      var month = currentDate.getMonth() + 1
+
+      if (month !== 12 || day < this.doors[door]) {
+        this.snackbar = true
+      } else {
+        this.openDoor = door === this.openDoor ? undefined : door
+      }
     }
   }
 }
@@ -67,5 +79,8 @@ export default {
 }
 .flex.xs2 {
   height: calc((100vh - 96px) / 4);
+}
+.snackbar {
+  width: 100%;
 }
 </style>
